@@ -1,3 +1,4 @@
+<?php include("db.php")?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,10 +14,10 @@
         </div>
 
         <div class="rounded shadow p-3 mt-5">
-            <form action="" method="post" class="row g-2">
+            <form action="index.php" method="post" class="row g-2">
                 <div class="input-group mt-5 mb-3">
-                    <input type="text" class="form-control" placeholder="Enter Task" aria-label="Recipient’s username" aria-describedby="button-addon2">
-                    <button class="btn btn-success" type="submit" id="button-addon2">Button</button>
+                    <input type="text" name="task" class="form-control" placeholder="Enter Task" aria-label="Recipient’s username" aria-describedby="button-addon2">
+                    <button class="btn btn-success" type="submit" id="button-addon2">Add Task</button>
                 </div>
             </form>         
         </div>
@@ -34,3 +35,11 @@
     </div>
 </body>
 </html>
+<?php
+if($_SERVER['REQUEST_METHOD'] == 'POST'){
+    $task_name = filter_input(INPUT_POST,"task",FILTER_SANITIZE_SPECIAL_CHARS);
+    $sql = "INSERT INTO tasks (task) VALUES  ('$task_name')";
+    mysqli_query($conn, $sql);
+}
+    mysqli_close($conn);
+?>
