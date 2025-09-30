@@ -1,4 +1,18 @@
-<?php include("db.php")?>
+<?php 
+
+include("db.php");
+if($_SERVER['REQUEST_METHOD'] == 'POST'){
+    $task_name = filter_input(INPUT_POST,"task",FILTER_SANITIZE_SPECIAL_CHARS);
+    $sql = "INSERT INTO tasks (task) VALUES  ('$task_name')";
+    mysqli_query($conn, $sql);
+    header("Location: index.php");
+    exit;
+}
+
+    $sql = "SELECT * FROM tasks";
+    $result = mysqli_query($conn,$sql);
+    mysqli_close($conn);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,22 +38,17 @@
 
         <div class="rounded shadow-sm p-3 mt-3">
             <ul class="list-group">
-                <li class="list-group-item list-group-item-action">An item</li>
-                <li class="list-group-item list-group-item-action">A second item</li>
-                <li class="list-group-item list-group-item-action">A third item</li>
-                <li class="list-group-item list-group-item-action">A fourth item</li>
-                <li class="list-group-item list-group-item-action">And a fifth one</li>
+                <?php
+
+                if(mysqli_num_rows($result)>0){
+                    while($row = mysqli_fetch_assoc($result)){
+                        echo "<li class='list-group-item list-group-item-action'>{$row['task']}</li>";
+                        };
+                    };
+                ?>
             </ul>
         </div>
         
     </div>
 </body>
 </html>
-<?php
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
-    $task_name = filter_input(INPUT_POST,"task",FILTER_SANITIZE_SPECIAL_CHARS);
-    $sql = "INSERT INTO tasks (task) VALUES  ('$task_name')";
-    mysqli_query($conn, $sql);
-}
-    mysqli_close($conn);
-?>
